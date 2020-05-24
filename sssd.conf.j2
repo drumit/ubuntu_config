@@ -1,0 +1,57 @@
+[sssd]
+        default_domain_suffix = domain.local
+	domains = domain.local
+	config_file_version = 2
+	services = nss, pam
+
+[nss]
+
+	filter_users = root 
+	shell_fallback = /sbin/nologin 
+	fallback_homedir = /usr/share/smbusers/%u 
+	default_shell = /bin/sh
+        entry_negative_timeout = 0
+        debug_level = 3
+[pam]
+
+        debug_level = 3
+ 
+[domain/domain.local]
+        debug_level = 3 
+	ad_domain = domain.local 
+	krb5_realm = domain.local
+        enumerate = false 
+	realmd_tags = manages-system joined-with-adcli 
+	cache_credentials = True 
+	id_provider = ad 
+	krb5_store_password_if_offline = True 
+	ldap_id_mapping = True 
+	use_fully_qualified_names = False 
+	fallback_homedir = /home/%d/%u 
+	access_provider = simple
+        simple_allow_groups = "%admins restricted" 
+	auth_provider = ad 
+	selinux_provider = False 
+	ldap_referrals = false 
+	ad_server = DC3A.domain.local 
+	ad_backup_server = DC.domain.local 
+	ldap_sasl_mech = GSSAPI 
+	ldap_schema = ad 
+	lookup_family_order = ipv4_only 
+	case_sensitive = false 
+	ldap_user_search_base = dc=domain,dc=local 
+	ldap_group_search_base = dc=domain,dc=local 
+	ldap_access_order = expire 
+	ldap_account_expire_policy = ad 
+	ldap_force_upper_case_realm = true 
+	krb5_canonicalize = false 
+	ldap_user_object_class = user 
+	ldap_user_name = sAMAccountName 
+	ldap_user_gecos = displayName 
+	ldap_user_principal = userPrincipalName 
+	ldap_user_modify_timestamp = whenChanged 
+	ldap_user_shadow_last_change = pwdLastSet 
+	ldap_user_shadow_expire = accountExpires
+	ldap_group_object_class = group
+        default_shell = /bin/bash
+        ldap_krb5_init_creds = true
