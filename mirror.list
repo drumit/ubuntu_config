@@ -14,7 +14,7 @@ set _tilde 0
 #                            OFFICIAL UBUNTU REPOS                               #
 #------------------------------------------------------------------------------#
 ###### Ubuntu Main Repos
-# 18.04 mirroring
+#20.04 mirroring
 deb http://archive.ubuntu.com/ubuntu focal main main/debian-installer restricted universe multiverse
 deb http://archive.ubuntu.com/ubuntu focal-updates main main/debian-installer restricted universe multiverse
 deb http://archive.ubuntu.com/ubuntu focal-proposed main restricted universe multiverse
