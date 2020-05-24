@@ -1,0 +1,30 @@
+############# config ##################
+set base_path    /repo  
+set mirror_path  $base_path/mirror
+set skel_path    $base_path/skel
+set var_path     $base_path/var
+set cleanscript $var_path/clean.sh
+set postmirror_script $var_path/postmirror.sh
+set run_postmirror 0
+set limit_rate 2000000
+set nthreads   20
+set _tilde 0
+############# end config ##############
+#------------------------------------------------------------------------------#
+#                            OFFICIAL UBUNTU REPOS                               #
+#------------------------------------------------------------------------------#
+###### Ubuntu Main Repos
+# 18.04 mirroring
+deb http://archive.ubuntu.com/ubuntu focal main main/debian-installer restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu focal-updates main main/debian-installer restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu focal-proposed main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu focal-security main main/debian-installer restricted universe multiverse
+
+clean http://archive.ubuntu.com/ubuntu
+
+#------------------------------------------------------------------------------#
+#                           UNOFFICIAL UBUNTU REPOS                            #
+#------------------------------------------------------------------------------#
+###### 3rd Party Binary Repos
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
