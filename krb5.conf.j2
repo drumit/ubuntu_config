@@ -2,7 +2,7 @@
         encrypt = yes 
 
 [libdefaults]
-	default_realm = ALLIEDTESTING.COM
+	default_realm = DOMAIN.LOCAL
 	kdc_timesync = 1
 	ccache_type = 4
 	forwardable = true
@@ -30,16 +30,16 @@
         }
 
 [realms]
-	ALLIEDTESTING.COM = {
-		kdc = dc3a.alliedtesting.com
-		kdc = dc3b.alliedtesting.com
-		admin_server = dc3a.alliedtesting.com
-		default_domain = ALLIEDTESTING.COM
+	DOMAIN.LOCAL = {
+		kdc = dc.domain.local
+		kdc = dc1.domain.local
+		admin_server = dc.domain.local
+		default_domain = DOMAIN.LOCAL
 	}
 	
 [domain_realm]
-	.alliedtesting.com = ALLIEDTESTING.COM
-	alliedtesting.com = ALLIEDTESTING.COM 
+	.domain.local = DOMAIN.LOCAL
+	domain.local = DOMAIN.LOCAL 
 
 [login]
 	krb4_convert = false
