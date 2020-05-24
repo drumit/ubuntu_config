@@ -1,0 +1,170 @@
+---
+- name: Install, configured and join Linux to Microsoft Active Directory
+  hosts: all
+  become: yes
+ 
+  tasks:
+  - name: Disable i386 architecture
+    command: dpkg --remove-architecture i386
+ 
+  - name: Install SSSD, KRB5, ADCLI, SAMBA, WINBIND, USBGUARD, CIFS packages and dependenses 
+    apt: 
+      name={{ item }} state=latest 
+    loop:
+      - krb5-user
+      - samba
+      - winbind
+      - libpam-krb5
+      - libpam-winbind
+      - libnss-winbind
+      - sssd-tools  
+      - oddjob
+      - msktutil
+      - net-tools
+      - adcli
+      - realmd
+      - linphone
+      - tree
+      - sharutils
+      - usbguard
+      - kmplayer
+      - default-jdk
+      - default-jre
+      - openjdk-8-jre-headless
+      - openjdk-8-jdk-headless
+      - ubuntu-restricted-extras
+      - gnome-panel
+      - cifs-utils
+      - keyutils
+      - synaptic
+      - libpam-ccreds 
+  
+  - name: Creating Kerberos configuration
+    template:
+      src: "templates/krb5.conf.j2"
+      dest: "/etc/krb5.conf"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Creating SSSD configuration
+    template:
+      src: "templates/sssd.conf.j2"
+      dest: "/etc/sssd/sssd.conf"
+      mode: 0777
+      owner: localadm
+      group: localadm
+    
+  - name: NTP
+    template:
+      src: "templates/ntp.conf.j2"
+      dest: "/etc/ntp.conf"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Common Auth
+    template:
+      src: "templates/common-auth.j2"
+      dest: "/etc/pam.d/common-auth"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Common Account
+    template:
+      src: "templates/common-account.j2"
+      dest: "/etc/pam.d/common-account"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Common Password
+    template:
+      src: "templates/common-password.j2"
+      dest: "/etc/pam.d/common-password"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Common Session
+    template:
+      src: "templates/common-session.j2"
+      dest: "/etc/pam.d/common-session"
+      mode: 0777
+      owner: localadm
+      group: localadm
+ 
+  - name: NS Switch
+    template:
+      src: "templates/nsswitch.conf.j2"
+      dest: "/etc/nsswitch.conf"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Samba
+    template:
+      src: "templates/samba.conf.j2"
+      dest: "/etc/samba/smb.conf"
+      mode: 0777
+      owner: localadm
+      group: localadm
+
+  - name: Realmd
+    template:
+      src: "templates/realmd.conf.j2"
+      dest: "/etc/realmd.conf"
+      mode: 0777
+      owner: localadm
+      group: localadm
+ 
+   
+  - name: Run a script with arguments (free form)
+    script: /etc/ansible/pcname.sh > /etc/hostname
+
+  - name: JOIN Active  
+    shell: net ads join -U user%password	
+
+  - name: Start service smbd
+    systemd:
+      name: smbd
+      state: started
+
+  - name: Stop service winbind, if started
+    systemd:
+      name: winbind
+      state: stopped
+
+  - name: Restart smbd
+    systemd:
+      name: smbd
+      state: restarted
+
+  - name: Start service winbind if not started
+    systemd:
+      name: winbind
+      state: started
+ 
+  - name: Make sure the folder exists (Debian, Ubuntu)
+    file:
+      path: /usr/local/share/ca-certificates
+      state: directory
+
+# Note that the .crt is actually a .pem renamed
+  - name: Copy the certificate (Debian, Ubuntu)
+    copy:
+      src: /etc/ansible/certs/AT_Root_Public.crt
+      dest: /usr/local/share/ca-certificates/AT_Root_Public.crt
+    register: result
+
+  - name: Update CA Trust (Debian, Ubuntu)
+    command: update-ca-certificates
+    when: result | changed  
+
+
+  - name: Remove Thunderbird
+    apt:
+      name=thunderbird state=absent
+
+
