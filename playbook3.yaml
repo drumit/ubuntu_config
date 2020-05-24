@@ -43,86 +43,56 @@
     template:
       src: "templates/krb5.conf.j2"
       dest: "/etc/krb5.conf"
-      mode: 0777
-      owner: localadm
-      group: localadm
-
+      mode: 0755
+      
   - name: Creating SSSD configuration
     template:
       src: "templates/sssd.conf.j2"
       dest: "/etc/sssd/sssd.conf"
-      mode: 0777
-      owner: localadm
-      group: localadm
-    
-  - name: NTP
-    template:
-      src: "templates/ntp.conf.j2"
-      dest: "/etc/ntp.conf"
-      mode: 0777
-      owner: localadm
-      group: localadm
-
+      mode: 0755
+      
   - name: Common Auth
     template:
       src: "templates/common-auth.j2"
       dest: "/etc/pam.d/common-auth"
-      mode: 0777
-      owner: localadm
-      group: localadm
-
+      mode: 0755
+      
   - name: Common Account
     template:
       src: "templates/common-account.j2"
       dest: "/etc/pam.d/common-account"
-      mode: 0777
-      owner: localadm
-      group: localadm
-
+      mode: 0755
+       
   - name: Common Password
     template:
       src: "templates/common-password.j2"
       dest: "/etc/pam.d/common-password"
-      mode: 0777
-      owner: localadm
-      group: localadm
-
+      mode: 0755
+      
   - name: Common Session
     template:
       src: "templates/common-session.j2"
       dest: "/etc/pam.d/common-session"
-      mode: 0777
-      owner: localadm
-      group: localadm
+      mode: 0755  
  
   - name: NS Switch
     template:
       src: "templates/nsswitch.conf.j2"
       dest: "/etc/nsswitch.conf"
-      mode: 0777
-      owner: localadm
-      group: localadm
+      mode: 0755  
 
   - name: Samba
     template:
       src: "templates/samba.conf.j2"
       dest: "/etc/samba/smb.conf"
-      mode: 0777
-      owner: localadm
-      group: localadm
-
+      mode: 0755
+      
   - name: Realmd
     template:
       src: "templates/realmd.conf.j2"
       dest: "/etc/realmd.conf"
-      mode: 0777
-      owner: localadm
-      group: localadm
+      mode: 0755
  
-   
-  - name: Run a script with arguments (free form)
-    script: /etc/ansible/pcname.sh > /etc/hostname
-
   - name: JOIN Active  
     shell: net ads join -U user%password	
 
@@ -150,18 +120,6 @@
     file:
       path: /usr/local/share/ca-certificates
       state: directory
-
-# Note that the .crt is actually a .pem renamed
-  - name: Copy the certificate (Debian, Ubuntu)
-    copy:
-      src: /etc/ansible/certs/AT_Root_Public.crt
-      dest: /usr/local/share/ca-certificates/AT_Root_Public.crt
-    register: result
-
-  - name: Update CA Trust (Debian, Ubuntu)
-    command: update-ca-certificates
-    when: result | changed  
-
 
   - name: Remove Thunderbird
     apt:
